@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#0c0b09" />
+  <title>Tonight's Instructions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --gold: #c9a84c;
+      --gold-dim: #7a6230;
+      --bg: #0c0b09;
+      --surface: #141310;
+      --border: rgba(201, 168, 76, 0.18);
+      --text: #ede9e0;
+      --muted: #7a7368;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-top: env(safe-area-inset-top, 0px);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      background: var(--bg);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      min-height: 100dvh;
+      padding-top: calc(var(--safe-top) + 36px);
+      padding-bottom: calc(var(--safe-bottom) + 48px);
+      padding-left: 20px;
+      padding-right: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── Header ── */
+    .eyebrow {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 9vw, 3rem);
+      font-weight: 300;
+      line-height: 1.1;
+      text-align: center;
+      color: var(--text);
+      letter-spacing: 0.01em;
+      margin-bottom: 8px;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .rainbow {
+      font-style: italic;
+      background: linear-gradient(
+        90deg,
+        #ff4e50, #fc913a, #f9d423, #6dd5fa, #7b4fff, #fc67fa, #ff4e50, #fc913a
+      );
+      background-size: 250% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 4s linear infinite;
+      display: inline-block;
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 0% center; }
+      100% { background-position: 250% center; }
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 32px;
+      letter-spacing: 0.03em;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: var(--gold-dim);
+      margin: 0 auto 32px;
+    }
+
+    /* ── Video expand ── */
+    .view-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 10px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      text-transform: uppercase;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .view-toggle svg {
+      width: 13px;
+      height: 13px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.3s ease;
+      flex-shrink: 0;
+    }
+
+    .view-toggle.open svg {
+      transform: rotate(180deg);
+    }
+
+    .video-drawer {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+      opacity: 0;
+    }
+
+    .video-drawer.open {
+      max-height: 600px;
+      opacity: 1;
+    }
+
+    .video-wrap {
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #000;
+      margin-top: 14px;
+    }
+
+    video {
+      width: 100%;
+      display: block;
+    }
+
+    /* ── Cards ── */
+    .cards {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(201, 168, 76, 0.1);
+      border: 1px solid rgba(201, 168, 76, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .card-icon svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .card-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 5px;
+    }
+
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 7px;
+      line-height: 1.2;
+    }
+
+    .card-body {
+      font-size: 13.5px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .card-body a {
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .card-body a:active {
+      color: var(--gold);
+      border-color: var(--gold-dim);
+    }
+
+    /* ── CTA Button ── */
+    .cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      max-width: 480px;
+      min-height: 52px;
+      background: var(--gold);
+      color: #0c0b09;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      margin-bottom: 36px;
+      -webkit-appearance: none;
+      transition: opacity 0.15s;
+    }
+
+    .cta:active {
+      opacity: 0.8;
+    }
+
+    .cta svg {
+      width: 15px;
+      height: 15px;
+      stroke: #0c0b09;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+      letter-spacing: 0.1em;
+    }
+
+    footer span {
+      color: var(--gold-dim);
+    }
+  </style>
+</head>
+<body>
+
+  <p class="eyebrow">Rooftop Lounge &nbsp;·&nbsp; Guest Guide</p>
+  <h1>Welcome to<br />Diana's<br /><span class="rainbow">Gay Day Party</span></h1>
+  <p class="subtitle">Everything you need to get in &amp; get up</p>
+  <div class="divider"></div>
+
+  <div class="cards">
+
+    <!-- Gate Access -->
+    <div class="card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      </div>
+      <div style="width:100%">
+        <p class="card-label">Gate Access</p>
+        <p class="card-title">Parking Garage</p>
+        <p class="card-body">
+          Text <a href="sms:+15712366006">+1 (571) 236-6006</a> and I'll open
+          the garage gate for you remotely from my phone. Include your name so I
+          know it's you.
+        </p>
+        <button class="view-toggle" onclick="toggleVideo(this)" aria-expanded="false">
+          View Video Here
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="video-drawer" aria-hidden="true">
+          <div class="video-wrap">
+            <video controls playsinline preload="metadata">
+              <source src="ParkingNavigation.mov" type="video/mp4" />
+              Your browser does not support this video.
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Getting to Rooftop -->
+    <div class="card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+      </div>
+      <div style="width:100%">
+        <p class="card-label">Navigation</p>
+        <p class="card-title">Getting to the Rooftop</p>
+        <p class="card-body">
+          Use the guest fob attached to this tag to access the elevator and
+          move through the building to reach the rooftop lounge.
+        </p>
+        <button class="view-toggle" onclick="toggleVideo(this)" aria-expanded="false">
+          View Video Here
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="video-drawer" aria-hidden="true">
+          <div class="video-wrap">
+            <video controls playsinline preload="metadata">
+              <source src="GettingtoRooftop.mov" type="video/mp4" />
+              Your browser does not support this video.
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exiting by Car -->
+    <div class="card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v5"/><circle cx="16" cy="17" r="2"/><circle cx="8" cy="17" r="2"/><path d="M14 17H10"/></svg>
+      </div>
+      <div style="width:100%">
+        <p class="card-label">Departure</p>
+        <p class="card-title">Exiting Building by Car</p>
+        <p class="card-body">
+          Text <a href="sms:+15712366006">+1 (571) 236-6006</a> when you're
+          ready to leave and I'll open the garage gate remotely so you can exit.
+        </p>
+        <button class="view-toggle" onclick="toggleVideo(this)" aria-expanded="false">
+          View Video Here
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="video-drawer" aria-hidden="true">
+          <div class="video-wrap">
+            <video controls playsinline preload="metadata">
+              <source src="ExitByCar.mov" type="video/mp4" />
+              Your browser does not support this video.
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exiting by Foot -->
+    <div class="card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5"/><polyline points="12 5 5 12 12 19"/></svg>
+      </div>
+      <div style="width:100%">
+        <p class="card-label">Departure</p>
+        <p class="card-title">Exiting Building by Foot</p>
+        <p class="card-body">
+          Use the guest fob to access the stairwell or elevator on your way
+          out. The main lobby door will open automatically from the inside.
+        </p>
+        <button class="view-toggle" onclick="toggleVideo(this)" aria-expanded="false">
+          View Video Here
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="video-drawer" aria-hidden="true">
+          <div class="video-wrap">
+            <video controls playsinline preload="metadata">
+              <source src="ExitByFoot.mov" type="video/mp4" />
+              Your browser does not support this video.
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <a class="cta" href="sms:+15712366006">
+    <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    Text to Open Gate
+  </a>
+
+  <footer>See you up top &nbsp;<span>✦</span>&nbsp; Enjoy the night</footer>
+
+  <script>
+    function toggleVideo(btn) {
+      const drawer = btn.nextElementSibling;
+      const isOpen = drawer.classList.contains('open');
+      drawer.classList.toggle('open', !isOpen);
+      btn.classList.toggle('open', !isOpen);
+      btn.setAttribute('aria-expanded', String(!isOpen));
+      drawer.setAttribute('aria-hidden', String(isOpen));
+      if (isOpen) {
+        const vid = drawer.querySelector('video');
+        if (vid) vid.pause();
+      }
+    }
+  </script>
+</html>
